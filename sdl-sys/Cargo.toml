@@ -1,0 +1,23 @@
+[package]
+name = "sdl-sys"
+version = "0.1.0"
+authors = ["Kaleb Elwert <kaleb@coded.io>"]
+license = "MIT OR Apache-2.0"
+edition = "2021"
+
+[dependencies]
+libc = "^0.2"
+
+[build-dependencies]
+bindgen = "^0.53"
+pkg-config = "^0.3"
+
+[features]
+default = ["mixer", "image", "ttf", "gfx"]
+mixer = []
+image = []
+ttf = []
+gfx = []
+
+[package.metadata.docs.rs]
+features = ["default", "mixer", "image", "ttf", "gfx"]
