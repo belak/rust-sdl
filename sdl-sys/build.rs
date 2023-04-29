@@ -12,14 +12,36 @@ struct NameOverrides;
 impl bindgen::callbacks::ParseCallbacks for NameOverrides {
     fn item_name(&self, original_item_name: &str) -> Option<String> {
         match original_item_name {
+            // Strange enum names
             "SDLKey" => Some("SDL_Key"),
             "SDLMod" => Some("SDL_KeyMod"),
             "CDstatus" => Some("SDL_CDStatus"),
+
+            // Weird capitalizations
             "SDL_GLattr" => Some("SDL_GLAttr"),
             "SDL_audiostatus" => Some("SDL_AudioStatus"),
             "SDL_eventaction" => Some("SDL_EventAction"),
+
+            // These are small fixes to type aliases - if you manually set up
+            // the type alias here, it seems to skip the alias and just use the
+            // type directly which looks way better in the documentation.
+            "_TTF_Font" => Some("TTF_Font"),
+            "_SDL_Joystick" => Some("SDL_Joystick"),
+
+            // The trick doesn't always work though.
+            //
+            //   typedef struct _SDL_TimerID *SDL_TimerID;
+            //
+            // By default this generates the following rust:
+            //
+            //   pub struct _SDL_TimerID { _unused: [u8; 0] }
+            //   pub type SDL_TimerID = *mut _SDL_TimerID;
+            //
+            // This is weird because it generates both a struct and a type which
+            // show up in the docs when we really only need one.
             _ => None,
-        }.map(|s| s.to_string())
+        }
+        .map(|s| s.to_string())
     }
 }
 
@@ -83,6 +105,7 @@ fn create_bindgen_builder(target: &str, host: &str, headers_paths: &[String]) ->
         .blacklist_type("FP_SUBNORMAL")
         .blacklist_type("FP_NORMAL")
         .blacklist_item("SDL_DUMMY_ENUM")
+        .blacklist_item("SDL_dummy_.*")
         .blacklist_item("IOPOL.*");
 
     bindings
