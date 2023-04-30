@@ -1,0 +1,25 @@
+[package]
+name = "sdl"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+sdl-sys = { version = "^0.1", path = "../sdl-sys" }
+thiserror = "1.0"
+libc = "0.2"
+itertools = "0.10"
+
+[dev-dependencies]
+anyhow = "1.0"
+
+[features]
+default = ["mixer", "image", "ttf", "gfx"]
+mixer = ["sdl-sys/mixer"]
+image = ["sdl-sys/image"]
+ttf = ["sdl-sys/ttf"]
+gfx = ["sdl-sys/gfx"]
+
+[package.metadata.docs.rs]
+features = ["default", "mixer", "image", "ttf", "gfx"]
