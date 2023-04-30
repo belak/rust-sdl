@@ -196,7 +196,6 @@ fn generate_bindings(target: &str, host: &str, headers_paths: &[String]) {
     #[cfg(feature = "gfx")]
     {
         let gfx_framerate_bindings = create_bindgen_builder(target, host, headers_paths)
-            .raw_line("use crate::*;")
             .header("wrapper_gfx_framerate.h")
             .whitelist_type("FPS.*")
             .whitelist_function("SDL_.*rame.*")
@@ -244,7 +243,7 @@ fn generate_bindings(target: &str, host: &str, headers_paths: &[String]) {
             .expect("Couldn't write gfx_primitives_bindings!");
 
         let gfx_imagefilter_bindings = create_bindgen_builder(target, host, headers_paths)
-            .raw_line("use crate::*;")
+            //.raw_line("use crate::*;")
             .header("wrapper_gfx_imagefilter.h")
             .whitelist_function("SDL_image.*")
             .blacklist_type("_IO.*|FILE")
