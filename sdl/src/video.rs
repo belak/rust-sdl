@@ -18,7 +18,7 @@ pub struct Surface {
 }
 
 impl Surface {
-    fn new(inner: *mut sys::SDL_Surface) -> Surface {
+    pub(crate) fn new(inner: *mut sys::SDL_Surface) -> Surface {
         Surface { inner }
     }
 

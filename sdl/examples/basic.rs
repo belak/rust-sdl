@@ -15,9 +15,9 @@ fn main() -> anyhow::Result<()> {
         .build()
         .unwrap();
 
-    window.line(10, 10, 100, 100, Color::MAGENTA)?;
-    window.circle(50, 50, 10, Color::RED)?;
-    window.box_(150, 150, 200, 200, Color::RED)?;
+    window.draw_line(10, 10, 100, 100, Color::MAGENTA)?;
+    window.draw_circle(50, 50, 10, Color::RED)?;
+    window.draw_box(150, 150, 200, 200, Color::RED)?;
 
     window.flip()?;
 
