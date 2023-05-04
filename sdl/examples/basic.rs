@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use sdl::{gfx::primitives::DrawRenderer, video::Color};
+use sdl::{gfx::primitives::DrawRenderer, Color};
 
 fn main() -> anyhow::Result<()> {
     println!("initializing sdl");
