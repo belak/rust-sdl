@@ -13,3 +13,12 @@ pub mod video;
 
 #[cfg(feature = "gfx")]
 pub mod gfx;
+
+#[cfg(feature = "image")]
+pub mod image;
+
+#[cfg(feature = "mixer")]
+pub mod mixer;
+
+#[cfg(feature = "ttf")]
+pub mod ttf;
