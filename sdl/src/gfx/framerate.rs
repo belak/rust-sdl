@@ -1,7 +1,7 @@
-use crate::sys::gfx::framerate;
 use crate::sdl;
+use crate::sys::gfx::framerate;
 
-use libc::{size_t, c_void};
+use libc::{c_void, size_t};
 use std::mem;
 
 /// Structure holding the state and timing information of the framerate controller.
@@ -25,7 +25,7 @@ impl FPSManager {
         let ret = unsafe { framerate::SDL_setFramerate(self.raw, rate) };
         match ret {
             0 => Ok(()),
-            _ => Err(sdl::get_error())
+            _ => Err(sdl::get_error()),
         }
     }
 
