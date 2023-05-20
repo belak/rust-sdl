@@ -120,6 +120,8 @@ impl WindowBuilder {
         self.window_flags |= sys::SDL_WindowFlags::SDL_RESIZABLE as u32;
         self
     }
+
+    // TODO: set icon
 }
 
 #[derive(thiserror::Error, Debug)]

@@ -4,12 +4,15 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 use std::{env, fs, io};
 
-#[derive(Debug)]
-struct NameOverrides;
+use bindgen::callbacks::IntKind;
 
-// We use ParseCallbacks to override the names of some types/functions to make
-// them match the same style as everything else.
-impl bindgen::callbacks::ParseCallbacks for NameOverrides {
+#[derive(Debug)]
+struct SdlOverrides;
+
+// We use ParseCallbacks to override the names and types of some
+// types/functions/constants to make them match the same style as everything
+// else.
+impl bindgen::callbacks::ParseCallbacks for SdlOverrides {
     fn item_name(&self, original_item_name: &str) -> Option<String> {
         match original_item_name {
             // Strange enum names
@@ -42,6 +45,29 @@ impl bindgen::callbacks::ParseCallbacks for NameOverrides {
             _ => None,
         }
         .map(|s| s.to_string())
+    }
+
+    fn int_macro(&self, name: &str, value: i64) -> Option<IntKind> {
+        match name {
+            "SDL_PRESSED" | "SDL_RELEASED" => Some(IntKind::U8),
+
+            // SDL_errcode
+            "SDL_ENOMEM" | "SDL_EFREAD" | "SDL_EFWRITE" | "SDL_EFSEEK" | "SDL_UNSUPPORTED" => {
+                Some(IntKind::Custom {
+                    name: "isize",
+                    is_signed: true,
+                })
+            }
+
+            "SDL_APPMOUSEFOCUS" | "SDL_APPINPUTFOCUS" | "SDL_APPACTIVE" => Some(IntKind::U8),
+
+            // SDL_WindowFlags
+            "SDL_SWSURFACE" | "SDL_HWSURFACE" | "SDL_ASYNCBLIT" | "SDL_ANYFORMAT"
+            | "SDL_HWPALETTE" | "SDL_DOUBLEBUF" | "SDL_FULLSCREEN" | "SDL_OPENGL"
+            | "SDL_OPENGLBLIT" | "SDL_RESIZABLE" | "SDL_NOFRAME" => Some(IntKind::U32),
+            _ if name.starts_with("SDL_BUTTON_") => Some(IntKind::U8),
+            _ => None,
+        }
     }
 }
 
@@ -98,7 +124,7 @@ fn create_bindgen_builder(target: &str, host: &str, headers_paths: &[String]) ->
     // There are a number of things which need to be blacklisted in all the
     // headers so we do it here to avoid repeating ourselves.
     bindings = bindings
-        .parse_callbacks(Box::new(NameOverrides {}))
+        .parse_callbacks(Box::new(SdlOverrides {}))
         .blacklist_type("FP_NAN")
         .blacklist_type("FP_INFINITE")
         .blacklist_type("FP_ZERO")
